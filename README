@@ -1,1 +1,3 @@
 I use this repository to expriment algorithm trading for stock exchange
+- Crossing of SMA50 and SMA100 is very efficient algorithm for US shares
+- Crossing of SMA100 and SMA200 is efficient for some FR shares such as WLN.PA, CDI.PA, RNO.PA
