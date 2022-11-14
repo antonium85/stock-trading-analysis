@@ -33,13 +33,13 @@ def main():
                     ['SPX500', 'CAC40'])
 
     if 'SPX500' in options:
-        symbols = st.sidebar.multiselect('Select a company',list_spx)
-
         df = pd.read_csv(current_dir+'spx500_short_term_strat.csv',index_col='ticker')
 
         with st.container():
             # Create a section for the dataframe header
             st.header('Recommendation for SPX500 companies')
+
+            symbols = st.multiselect('Select SP500 companies',list_spx)
             
             if not symbols :
                 st.write(df)
@@ -47,13 +47,14 @@ def main():
                 st.write(df.loc[df.index.isin(symbols)])
 
     if 'CAC40' in options:
-        symbols = st.sidebar.multiselect('Select a company',list_cac40)
-
         df = pd.read_csv(current_dir+'cac40_short_term_strat.csv',index_col='ticker')
 
         with st.container():
             # Create a section for the dataframe header
             st.header('Recommendation for CAC40 companies')
+
+            symbols = st.multiselect('Select CAC40 companies',list_cac40)
+
             if not symbols :
                 st.write(df)
             else:
