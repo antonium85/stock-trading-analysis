@@ -3,10 +3,6 @@ import os
 
 api_key = 'b229374c-6819-4e1e-8403-69b1501d5c1e'
 
-def get_current_dir():
-    full_path = os.path.realpath(__file__)
-    return os.path.dirname(full_path) + '/'
-
 def main():
     ss = StockSymbol(api_key)
     current_dir = get_current_dir()
@@ -42,7 +38,7 @@ def main():
     output = output[['company','ticker','recommandation', 'date', 'traded price','actual price']]
 
     # order log
-    output.to_csv('spx500_short_term_strat.csv',index=False)
+    output.to_csv(current_dir+'spx500_short_term_strat.csv',index=False)
 
     cac40_datas = {}
     for item in list_cac40:
@@ -69,7 +65,7 @@ def main():
     output = output[['company','ticker','recommandation', 'date', 'traded price','actual price']]
 
     # order log
-    output.to_csv('cac40_short_term_strat.csv',index=False)
+    output.to_csv(current_dir+'cac40_short_term_strat.csv',index=False)
 
 if __name__ == '__main__':
     main()

@@ -8,6 +8,8 @@ import warnings
 warnings.filterwarnings('ignore')
 
 def main():
+    current_dir = get_current_dir()
+
     # get spx list
     ss = StockSymbol(api_key)
     list_spx = ss.get_symbol_list(index="SPX",symbols_only=True)
@@ -33,7 +35,7 @@ def main():
     if 'SPX500' in options:
         symbols = st.sidebar.multiselect('Select a company',list_spx)
 
-        df = pd.read_csv('spx500_short_term_strat.csv',index_col='ticker')
+        df = pd.read_csv(current_dir+'spx500_short_term_strat.csv',index_col='ticker')
 
         with st.container():
             # Create a section for the dataframe header
@@ -47,7 +49,7 @@ def main():
     if 'CAC40' in options:
         symbols = st.sidebar.multiselect('Select a company',list_cac40)
 
-        df = pd.read_csv('cac40_short_term_strat.csv',index_col='ticker')
+        df = pd.read_csv(current_dir+'cac40_short_term_strat.csv',index_col='ticker')
 
         with st.container():
             # Create a section for the dataframe header

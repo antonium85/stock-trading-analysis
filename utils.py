@@ -3,6 +3,7 @@ import yfinance as yf
 from datetime import datetime, timedelta
 import time
 import pandas as pd
+import os
 from stocksymbol import StockSymbol
 
 api_key = 'b229374c-6819-4e1e-8403-69b1501d5c1e'
@@ -14,6 +15,10 @@ def get_sp500_symbol_list():
     symbol_list_spx = ss.get_symbol_list(index="SPX")
 
     return symbol_list_spx
+
+def get_current_dir():
+    full_path = os.path.realpath(__file__)
+    return os.path.dirname(full_path) + '/'
 
 def get_historical_datas(ticker, interval):
   if interval == '1d':
