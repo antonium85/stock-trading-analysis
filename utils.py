@@ -4,17 +4,6 @@ from datetime import datetime, timedelta
 import time
 import pandas as pd
 import os
-from stocksymbol import StockSymbol
-
-api_key = 'b229374c-6819-4e1e-8403-69b1501d5c1e'
-
-def get_sp500_symbol_list():
-    ss = StockSymbol(api_key)
-    
-    # get symbol list based on index
-    symbol_list_spx = ss.get_symbol_list(index="SPX")
-
-    return symbol_list_spx
 
 def get_current_dir():
     full_path = os.path.realpath(__file__)
@@ -65,8 +54,8 @@ def get_historical_datas(ticker, interval):
                                         (df['Low']  - df['Close'].shift()).abs()))]
   df['ATR'] = df['TR'].rolling(14).sum()/14
 
-  df['TP'] = df['ATR'] * 3
-  df['SL'] = df['ATR'] * 2
+  df['TP'] = df['Close'].iloc[-1] + df['ATR'] * 3
+  df['SL'] = df['Close'].iloc[-1] - df['ATR'] * 2
 
   del(df['TR'])
   del(df['ATR'])
@@ -101,7 +90,7 @@ def strategy_sma50vs100(item, df=pd.DataFrame()):
   finalResult = usd + share * df['Close'].iloc[-1]
   pnl = (finalResult - 1000)/1000 * 100
 
-  myrow = pd.DataFrame({'company':item['longName'],'ticker':item['symbol'],'recommandation':lastPosition,'date':lastIndex,'traded price':lastPrice,'actual price':df['Close'].iloc[-1],'wallet':finalResult,'pnl':pnl,'tp':df['TP'].iloc[-1],'sl':df['SL'].iloc[-1]},index=[item['symbol']])
+  myrow = pd.DataFrame({'company':item['name'],'ticker':item['symbol'],'recommandation':lastPosition,'date':lastIndex,'traded price':lastPrice,'actual price':df['Close'].iloc[-1],'wallet':finalResult,'pnl':pnl,'take profit':df['TP'].iloc[-1],'stop loss':df['SL'].iloc[-1]},index=[item['symbol']])
 
   return myrow
 
@@ -133,7 +122,7 @@ def strategy_sma100vs200(item, df=pd.DataFrame()):
   finalResult = usd + share * df['Close'].iloc[-1]
   pnl = (finalResult - 1000)/1000 * 100
 
-  myrow = pd.DataFrame({'company':item['longName'],'ticker':item['symbol'],'recommandation':lastPosition,'date':lastIndex,'traded price':lastPrice,'actual price':df['Close'].iloc[-1],'wallet':finalResult,'pnl':pnl,'tp':df['TP'].iloc[-1],'sl':df['SL'].iloc[-1]},index=[item['symbol']])
+  myrow = pd.DataFrame({'company':item['name'],'ticker':item['symbol'],'recommandation':lastPosition,'date':lastIndex,'traded price':lastPrice,'actual price':df['Close'].iloc[-1],'wallet':finalResult,'pnl':pnl,'take profit':df['TP'].iloc[-1],'stop loss':df['SL'].iloc[-1]},index=[item['symbol']])
 
   return myrow
 
@@ -165,6 +154,6 @@ def strategy_macd(item, df=pd.DataFrame()):
   finalResult = usd + share * df['Close'].iloc[-1]
   pnl = (finalResult - 1000)/1000 * 100
 
-  myrow = pd.DataFrame({'company':item['longName'],'ticker':item['symbol'],'recommandation':lastPosition,'date':lastIndex,'traded price':lastPrice,'actual price':df['Close'].iloc[-1],'wallet':finalResult,'pnl':pnl,'tp':df['TP'].iloc[-1],'sl':df['SL'].iloc[-1]},index=[item['symbol']])
+  myrow = pd.DataFrame({'company':item['name'],'ticker':item['symbol'],'recommandation':lastPosition,'date':lastIndex,'traded price':lastPrice,'actual price':df['Close'].iloc[-1],'wallet':finalResult,'pnl':pnl,'take profit':df['TP'].iloc[-1],'stop loss':df['SL'].iloc[-1]},index=[item['symbol']])
 
   return myrow

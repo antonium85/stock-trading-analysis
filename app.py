@@ -11,9 +11,10 @@ def main():
     current_dir = get_current_dir()
 
     # get spx list
-    ss = StockSymbol(api_key)
-    list_spx = ss.get_symbol_list(index="SPX",symbols_only=True)
-    list_cac40 = ss.get_symbol_list(index="PX1",symbols_only=True)
+    list_spx = pd.read_csv(current_dir+'markets/SPX500.csv')
+
+    # get spf120 list
+    list_spf120 = pd.read_csv(current_dir+'markets/SPF120.csv')
 
     # Add a title and intro text
     st.title('💸 What should you do last 7 days ?')
@@ -30,33 +31,33 @@ def main():
 
         options = st.multiselect(
                     'Select market',
-                    ['SPX500', 'CAC40'])
+                    ['SPX500', 'SPF120'])
 
     if 'SPX500' in options:
         df = pd.read_csv(current_dir+'spx500_short_term_strat.csv',index_col='ticker')
 
         with st.container():
             # Create a section for the dataframe header
-            st.header('Recommendation for SPX500 companies')
+            st.header('🇺🇸 Recommendation for SPX500 companies')
 
-            symbols = st.multiselect('Select SP500 companies',list_spx)
+            symbols = st.multiselect('Select SP500 companies',list_spx[['symbol']])
             
             if not symbols :
-                st.write(df)
+                st.write(df.sort_values(by='date',ascending=False))
             else:
                 st.write(df.loc[df.index.isin(symbols)])
 
-    if 'CAC40' in options:
-        df = pd.read_csv(current_dir+'cac40_short_term_strat.csv',index_col='ticker')
+    if 'SPF120' in options:
+        df = pd.read_csv(current_dir+'spf120_short_term_strat.csv',index_col='ticker')
 
         with st.container():
             # Create a section for the dataframe header
-            st.header('Recommendation for CAC40 companies')
+            st.header('🇫🇷 Recommendation for SPF120 companies')
 
-            symbols = st.multiselect('Select CAC40 companies',list_cac40)
+            symbols = st.multiselect('Select SPF120 companies',list_spf120[['symbol']])
 
             if not symbols :
-                st.write(df)
+                st.write(df.sort_values(by='date',ascending=False))
             else:
                 st.write(df.loc[df.index.isin(symbols)])
 
