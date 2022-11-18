@@ -34,7 +34,12 @@ def main():
                     ['SPX500', 'SPF120'])
 
     if 'SPX500' in options:
-        df = pd.read_csv(current_dir+'spx500_short_term_strat.csv',index_col='ticker')
+        if add_radio == 'Short-term (12-26 days)' :
+            df = pd.read_csv(current_dir+'spx500_short_term_strat.csv',index_col='ticker')
+        elif add_radio == 'Mid-term (50-100 days)' :
+            df = pd.read_csv(current_dir+'spx500_mid_term_strat.csv',index_col='ticker')
+        elif add_radio == 'Long-term (100-200 days)' :
+            df = pd.read_csv(current_dir+'spx500_long_term_strat.csv',index_col='ticker')
 
         with st.container():
             # Create a section for the dataframe header
@@ -48,7 +53,12 @@ def main():
                 st.write(df.loc[df.index.isin(symbols)])
 
     if 'SPF120' in options:
-        df = pd.read_csv(current_dir+'spf120_short_term_strat.csv',index_col='ticker')
+        if add_radio == 'Short-term (12-26 days)' :
+            df = pd.read_csv(current_dir+'spf120_short_term_strat.csv',index_col='ticker')
+        elif add_radio == 'Mid-term (50-100 days)' :
+            df = pd.read_csv(current_dir+'spf120_mid_term_strat.csv',index_col='ticker')
+        elif add_radio == 'Long-term (100-200 days)' :
+            df = pd.read_csv(current_dir+'spf120_long_term_strat.csv',index_col='ticker')
 
         with st.container():
             # Create a section for the dataframe header
