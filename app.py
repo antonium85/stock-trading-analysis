@@ -11,6 +11,9 @@ def main():
     current_dir = get_current_dir()
 
     # get spx list
+    list_etf = pd.read_csv(current_dir+'markets/trackers.csv')
+
+    # get spx list
     list_spx = pd.read_csv(current_dir+'markets/SPX500.csv')
 
     # get spf120 list
@@ -31,7 +34,7 @@ def main():
 
         options = st.multiselect(
                     'Select market',
-                    ['SPX500', 'SPF120'])
+                    ['SPX500', 'SPF120', 'ETF Trackers'])
 
     if 'SPX500' in options:
         if add_radio == 'Short-term (12-26 days)' :
@@ -65,6 +68,25 @@ def main():
             st.header('🇫🇷 Recommendation for SPF120 companies')
 
             symbols = st.multiselect('Select SPF120 companies',list_spf120[['symbol']])
+
+            if not symbols :
+                st.write(df.sort_values(by='date',ascending=False))
+            else:
+                st.write(df.loc[df.index.isin(symbols)])
+
+    if 'ETF Trackers' in options:
+        if add_radio == 'Short-term (12-26 days)' :
+            df = pd.read_csv(current_dir+'etf_short_term_strat.csv',index_col='ticker')
+        elif add_radio == 'Mid-term (50-100 days)' :
+            df = pd.read_csv(current_dir+'etf_mid_term_strat.csv',index_col='ticker')
+        elif add_radio == 'Long-term (100-200 days)' :
+            df = pd.read_csv(current_dir+'etf_long_term_strat.csv',index_col='ticker')
+
+        with st.container():
+            # Create a section for the dataframe header
+            st.header('🇫🇷 Recommendation for ETF trackers')
+
+            symbols = st.multiselect('Select ETF trackers',list_etf[['symbol']])
 
             if not symbols :
                 st.write(df.sort_values(by='date',ascending=False))

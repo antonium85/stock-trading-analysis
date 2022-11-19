@@ -14,8 +14,8 @@ def apply_strategy(list_companies, data, func) :
             print(symbol,err)
             continue
         
-    week_ago = datetime.today() - timedelta(7)
-    output = dt.loc[(dt['date'] > week_ago) & (dt['pnl'] > 0)].sort_values(by="pnl",ascending=False)
+    month_ago = datetime.today() - timedelta(30)
+    output = dt.loc[(dt['date'] > month_ago) & (dt['pnl'] > 0)].sort_values(by="pnl",ascending=False)
     output = output[['company','ticker','recommandation', 'date', 'traded price','actual price','pnl','take profit','stop loss']]
 
     return output
@@ -23,11 +23,38 @@ def apply_strategy(list_companies, data, func) :
 def main():
     current_dir = get_current_dir()
     
+    # get trackers list
+    list_etf = pd.read_csv(current_dir+'markets/trackers.csv')
+
     # get spx list
     list_spx = pd.read_csv(current_dir+'markets/SPX500.csv')
 
     # get spf120 list
     list_spf120 = pd.read_csv(current_dir+'markets/SPF120.csv')
+
+    print('Update results for ETF trackers')
+    etf_datas = {}
+    for index,row in list_etf.iterrows():
+        symbol = row['symbol']
+        try :
+            etf_datas[symbol] = get_historical_datas(symbol, '1d')
+        except Exception as err :
+            continue
+
+    # short-term strategy for ETF
+    output = apply_strategy(list_etf,etf_datas,strategy_macd)
+    # order log
+    output.to_csv(current_dir+'etf_short_term_strat.csv',index=False)
+
+    # mid-term strategy for ETF
+    output = apply_strategy(list_etf,etf_datas,strategy_sma50vs100)
+    # order log
+    output.to_csv(current_dir+'etf_mid_term_strat.csv',index=False)
+
+    # long-term strategy for ETF
+    output = apply_strategy(list_etf,etf_datas,strategy_sma100vs200)
+    # order log
+    output.to_csv(current_dir+'etf_long_term_strat.csv',index=False)
     
     print('Update results for SPX500')
     spx_datas = {}

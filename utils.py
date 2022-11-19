@@ -74,7 +74,7 @@ def strategy_sma50vs100(item, df=pd.DataFrame()):
     share = 0
 
     for index, row in df.iterrows():
-        if row['SMA50'] > row['SMA100'] and row['Close'] > row['SSA'] and row['Close'] > row['SSB'] and usd > 10:
+        if row['SMA50'] > row['SMA100'] and usd > 10:
             share = usd / row['Close']
             usd = 0
             
@@ -82,7 +82,7 @@ def strategy_sma50vs100(item, df=pd.DataFrame()):
             lastPosition = 'buy'
             lastPrice = row['Close']
 
-        if row['SMA50'] < row['SMA100'] and row['Close'] < row['SSA'] and row['Close'] < row['SSB'] and share > 1:
+        if row['SMA50'] < row['SMA100'] and share > 1:
             usd = share * row['Close']
             share = 0
             
@@ -108,7 +108,7 @@ def strategy_sma100vs200(item, df=pd.DataFrame()):
     share = 0
 
     for index, row in df.iterrows():
-        if row['SMA100'] > row['SMA200'] and row['Close'] > row['SSA'] and row['Close'] > row['SSB'] and usd > 10:
+        if row['SMA100'] > row['SMA200'] and usd > 10:
             share = usd / row['Close']
             usd = 0
             
@@ -116,7 +116,7 @@ def strategy_sma100vs200(item, df=pd.DataFrame()):
             lastPosition = 'buy'
             lastPrice = row['Close']
 
-        if row['SMA100'] < row['SMA200'] and row['Close'] < row['SSA'] and row['Close'] < row['SSB'] and share > 1:
+        if row['SMA100'] < row['SMA200'] and share > 1:
             usd = share * row['Close']
             share = 0
             
