@@ -73,6 +73,10 @@ def strategy_sma50vs100(item, df=pd.DataFrame()):
     usd = 1000
     share = 0
 
+    nbTrade = 0
+    goodTrade = 0
+    winrate = 0
+
     for index, row in df.iterrows():
         if row['SMA50'] > row['SMA100'] and usd > 10:
             share = usd / row['Close']
@@ -86,6 +90,9 @@ def strategy_sma50vs100(item, df=pd.DataFrame()):
             usd = share * row['Close']
             share = 0
             
+            nbTrade += 1
+            if row['Close'] > lastPrice : goodTrade += 1
+
             lastIndex = index
             lastPosition = 'sell'
             lastPrice = row['Close']
@@ -94,8 +101,96 @@ def strategy_sma50vs100(item, df=pd.DataFrame()):
     pnl = (finalResult - 1000)/1000 * 100
     tp = lastPrice + df['TP'].iloc[-1]
     sl = lastPrice - df['SL'].iloc[-1]
+    if nbTrade > 0 : 
+        winrate = goodTrade/nbTrade * 100
+    
+    myrow = pd.DataFrame({'company':item['name'],'ticker':item['symbol'],'recommandation':lastPosition,'date':lastIndex,'traded price':lastPrice,'actual price':df['Close'].iloc[-1],'wallet':finalResult,'pnl':pnl,'win rate':winrate,'take profit':tp,'stop loss':sl},index=[item['symbol']])
+    
+    return myrow
 
-    myrow = pd.DataFrame({'company':item['name'],'ticker':item['symbol'],'recommandation':lastPosition,'date':lastIndex,'traded price':lastPrice,'actual price':df['Close'].iloc[-1],'wallet':finalResult,'pnl':pnl,'take profit':tp,'stop loss':sl},index=[item['symbol']])
+def strategy_sma5vs8vs13(item, df=pd.DataFrame()):
+    lastPosition=''
+    lastIndex = ''
+    lastPrice = ''
+
+    usd = 1000
+    share = 0
+
+    nbTrade = 0
+    goodTrade = 0
+    winrate = 0
+
+    for index, row in df.iterrows():
+        if row['SMA5'] > row['SMA13'] and row['SMA8'] > row['SMA13'] and usd > 10:
+            share = usd / row['Close']
+            usd = 0
+            
+            lastIndex = index
+            lastPosition = 'buy'
+            lastPrice = row['Close']
+
+        if row['SMA5'] < row['SMA13'] and row['SMA8'] < row['SMA13'] and share > 1:
+            usd = share * row['Close']
+            share = 0
+
+            nbTrade += 1
+            if row['Close'] > lastPrice : goodTrade += 1
+            
+            lastIndex = index
+            lastPosition = 'sell'
+            lastPrice = row['Close']
+
+    finalResult = usd + share * df['Close'].iloc[-1]
+    pnl = (finalResult - 1000)/1000 * 100
+    tp = lastPrice + df['TP'].iloc[-1]
+    sl = lastPrice - df['SL'].iloc[-1]
+    if nbTrade > 0 : 
+        winrate = goodTrade/nbTrade * 100
+    
+    myrow = pd.DataFrame({'company':item['name'],'ticker':item['symbol'],'recommandation':lastPosition,'date':lastIndex,'traded price':lastPrice,'actual price':df['Close'].iloc[-1],'wallet':finalResult,'pnl':pnl,'win rate':winrate,'take profit':tp,'stop loss':sl},index=[item['symbol']])
+    
+    return myrow
+
+def strategy_ema8vs21vs50(item, df=pd.DataFrame()):
+    lastPosition=''
+    lastIndex = ''
+    lastPrice = ''
+
+    usd = 1000
+    share = 0
+
+    nbTrade = 0
+    goodTrade = 0
+    winrate = 0
+
+    for index, row in df.iterrows():
+        if row['EMA8'] > row['EMA50'] and row['EMA21'] > row['EMA50'] and usd > 10:
+            share = usd / row['Close']
+            usd = 0
+            
+            lastIndex = index
+            lastPosition = 'buy'
+            lastPrice = row['Close']
+
+        if row['EMA8'] < row['EMA50'] and row['EMA21'] < row['EMA50'] and share > 1:
+            usd = share * row['Close']
+            share = 0
+
+            nbTrade += 1
+            if row['Close'] > lastPrice : goodTrade += 1
+            
+            lastIndex = index
+            lastPosition = 'sell'
+            lastPrice = row['Close']
+
+    finalResult = usd + share * df['Close'].iloc[-1]
+    pnl = (finalResult - 1000)/1000 * 100
+    tp = lastPrice + df['TP'].iloc[-1]
+    sl = lastPrice - df['SL'].iloc[-1]
+    if nbTrade > 0 : 
+        winrate = goodTrade/nbTrade * 100
+    
+    myrow = pd.DataFrame({'company':item['name'],'ticker':item['symbol'],'recommandation':lastPosition,'date':lastIndex,'traded price':lastPrice,'actual price':df['Close'].iloc[-1],'wallet':finalResult,'pnl':pnl,'win rate':winrate,'take profit':tp,'stop loss':sl},index=[item['symbol']])
 
     return myrow
 
@@ -106,6 +201,10 @@ def strategy_sma100vs200(item, df=pd.DataFrame()):
 
     usd = 1000
     share = 0
+
+    nbTrade = 0
+    goodTrade = 0
+    winrate = 0
 
     for index, row in df.iterrows():
         if row['SMA100'] > row['SMA200'] and usd > 10:
@@ -119,6 +218,9 @@ def strategy_sma100vs200(item, df=pd.DataFrame()):
         if row['SMA100'] < row['SMA200'] and share > 1:
             usd = share * row['Close']
             share = 0
+
+            nbTrade += 1
+            if row['Close'] > lastPrice : goodTrade += 1
             
             lastIndex = index
             lastPosition = 'sell'
@@ -128,20 +230,25 @@ def strategy_sma100vs200(item, df=pd.DataFrame()):
     pnl = (finalResult - 1000)/1000 * 100
     tp = precision(lastPrice + df['TP'].iloc[-1])
     sl = precision(lastPrice - df['SL'].iloc[-1])
+    if nbTrade > 0 : 
+        winrate = goodTrade/nbTrade * 100
     
-    myrow = pd.DataFrame({'company':item['name'],'ticker':item['symbol'],'recommandation':lastPosition,'date':lastIndex,'traded price':lastPrice,'actual price':df['Close'].iloc[-1],'wallet':finalResult,'pnl':pnl,'take profit':tp,'stop loss':sl},index=[item['symbol']])
+    myrow = pd.DataFrame({'company':item['name'],'ticker':item['symbol'],'recommandation':lastPosition,'date':lastIndex,'traded price':lastPrice,'actual price':df['Close'].iloc[-1],'wallet':finalResult,'pnl':pnl,'win rate':winrate,'take profit':tp,'stop loss':sl},index=[item['symbol']])
     return myrow
 
 def strategy_macd(item, df=pd.DataFrame()):
     lastPosition=''
     lastIndex = ''
-    lastPrice = ''
+    lastPrice = 0
 
     usd = 1000
     share = 0
 
+    nbTrade = 0
+    goodTrade = 0
+
     for index, row in df.iterrows():
-        if row['MACD_DIFF'] > 0 and row['Close'] > row['SSA'] and row['Close'] > row['SSB'] and usd > 10:
+        if row['MACD_DIFF'] > 0 and (row['Close'] > row['SSA'] and row['Close'] > row['SSB']) and usd > 10:
             share = usd / row['Close']
             usd = 0
             
@@ -149,9 +256,12 @@ def strategy_macd(item, df=pd.DataFrame()):
             lastPosition = 'buy'
             lastPrice = row['Close']
 
-        if row['MACD_DIFF'] < 0 and row['Close'] < row['SSA'] and row['Close'] < row['SSB'] and share > 1:
+        if (row['MACD_DIFF'] < 0 and row['Close'] < row['SSA'] and row['Close'] < row['SSB']) and share > 1:
             usd = share * row['Close']
             share = 0
+
+            nbTrade += 1
+            if row['Close'] > lastPrice : goodTrade += 1 
             
             lastIndex = index
             lastPosition = 'sell'
@@ -162,6 +272,6 @@ def strategy_macd(item, df=pd.DataFrame()):
     tp = lastPrice + df['TP'].iloc[-1]
     sl = lastPrice - df['SL'].iloc[-1]
 
-    myrow = pd.DataFrame({'company':item['name'],'ticker':item['symbol'],'recommandation':lastPosition,'date':lastIndex,'traded price':lastPrice,'actual price':df['Close'].iloc[-1],'wallet':finalResult,'pnl':pnl,'take profit':tp,'stop loss':sl},index=[item['symbol']])
+    myrow = pd.DataFrame({'company':item['name'],'ticker':item['symbol'],'recommandation':lastPosition,'date':lastIndex,'traded price':lastPrice,'actual price':df['Close'].iloc[-1],'wallet':finalResult,'pnl':pnl,'win rate':goodTrade/nbTrade*100,'take profit':tp,'stop loss':sl},index=[item['symbol']])
 
     return myrow

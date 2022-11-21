@@ -3,7 +3,7 @@ import os
 
 def apply_strategy(list_companies, data, func) :
     print('Apply strategy for ',func)
-    dt = pd.DataFrame(columns = ['company','ticker','recommandation', 'date', 'traded price','actual price','wallet','pnl','take profit','stop loss'])
+    dt = pd.DataFrame(columns = ['company','ticker','recommandation','date','traded price','actual price','wallet','pnl','win rate','take profit','stop loss'])
 
     for index,row in list_companies.iterrows():
         symbol = row['symbol']
@@ -14,9 +14,9 @@ def apply_strategy(list_companies, data, func) :
             print(symbol,err)
             continue
         
-    month_ago = datetime.today() - timedelta(30)
+    month_ago = datetime.today() - timedelta(15)
     output = dt.loc[(dt['date'] > month_ago) & (dt['pnl'] > 0)].sort_values(by="pnl",ascending=False)
-    output = output[['company','ticker','recommandation', 'date', 'traded price','actual price','pnl','take profit','stop loss']]
+    output = output[['company','ticker','recommandation','date','traded price','actual price','pnl','win rate','take profit','stop loss']]
 
     return output
 
@@ -42,12 +42,12 @@ def main():
             continue
 
     # short-term strategy for ETF
-    output = apply_strategy(list_etf,etf_datas,strategy_macd)
+    output = apply_strategy(list_etf,etf_datas,strategy_sma5vs8vs13)
     # order log
     output.to_csv(current_dir+'etf_short_term_strat.csv',index=False)
 
     # mid-term strategy for ETF
-    output = apply_strategy(list_etf,etf_datas,strategy_sma50vs100)
+    output = apply_strategy(list_etf,etf_datas,strategy_macd)
     # order log
     output.to_csv(current_dir+'etf_mid_term_strat.csv',index=False)
 
@@ -91,12 +91,12 @@ def main():
             continue
     
     # short-term strategy for SPF120
-    output = apply_strategy(list_spf120,spf120_datas,strategy_macd)
+    output = apply_strategy(list_spf120,spf120_datas,strategy_sma5vs8vs13)
     # order log
     output.to_csv(current_dir+'spf120_short_term_strat.csv',index=False)
 
     # short-term strategy for SPF120
-    output = apply_strategy(list_spf120,spf120_datas,strategy_sma50vs100)
+    output = apply_strategy(list_spf120,spf120_datas,strategy_ema8vs21vs50)
     # order log
     output.to_csv(current_dir+'spf120_mid_term_strat.csv',index=False)
 

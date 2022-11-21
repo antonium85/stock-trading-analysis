@@ -51,7 +51,7 @@ def main():
             symbols = st.multiselect('Select SP500 companies',list_spx[['symbol']])
             
             if not symbols :
-                st.write(df.sort_values(by='date',ascending=False))
+                st.write(df.sort_values(by='pnl',ascending=False))
             else:
                 st.write(df.loc[df.index.isin(symbols)])
 
@@ -70,7 +70,7 @@ def main():
             symbols = st.multiselect('Select SPF120 companies',list_spf120[['symbol']])
 
             if not symbols :
-                st.write(df.sort_values(by='date',ascending=False))
+                st.write(df.sort_values(by='pnl',ascending=False))
             else:
                 st.write(df.loc[df.index.isin(symbols)])
 
@@ -89,7 +89,7 @@ def main():
             symbols = st.multiselect('Select ETF trackers',list_etf[['symbol']])
 
             if not symbols :
-                st.write(df.sort_values(by='date',ascending=False))
+                st.write(df.sort_values(by='pnl',ascending=False))
             else:
                 st.write(df.loc[df.index.isin(symbols)])
 
