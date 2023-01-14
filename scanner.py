@@ -76,7 +76,7 @@ def main():
     output.to_csv(current_dir+'spx500_mid_term_strat.csv',index=False)
 
     # long-term strategy for SPX500
-    output = apply_strategy(list_spx,spx_datas,strategy_sma100vs200)
+    output = apply_strategy(list_spx,spx_datas,strategy_sma50vs200)
     # order log
     output.to_csv(current_dir+'spx500_long_term_strat.csv',index=False)
     
